@@ -8,7 +8,7 @@
 import SnapKit
 import UIKit
 
-class TodayViewController: UICollectionViewController {
+final class TodayViewController: UICollectionViewController {
     private var todayList: [Today] = [Today]()
     
     override func viewDidLoad() {
@@ -26,6 +26,7 @@ extension TodayViewController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TodayCollectionViewCell", for: indexPath) as? TodayCollectionViewCell else { return UICollectionViewCell()}
+        // withReuseIdentifier는 register 할 때 사용한 identifier
         cell.setupSubviews(today: todayList[indexPath.row])
         return cell
     }
@@ -46,6 +47,9 @@ extension TodayViewController: UICollectionViewDelegateFlowLayout {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // detail
         print("show detail: \(todayList[indexPath.row])")
+        let AppDetailViewController = AppDetailViewController(today: todayList[indexPath.row])
+        // self.present (viewController는 기본적으로 present method를 가지고 있다.)
+        present(AppDetailViewController, animated: true, completion: nil)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

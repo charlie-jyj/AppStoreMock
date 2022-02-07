@@ -34,13 +34,14 @@ class TodayCollectionViewCell: UICollectionViewCell {
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
+        imageView.clipsToBounds = true  // 이미지가 넘치지 않도록
         imageView.layer.cornerRadius = 12.0
         imageView.backgroundColor = .gray
         return imageView
     }()
 
     func setupSubviews(today: Today) {
+        // 순서 중요
         [imageView, titleLabel, subTitleLabel, descriptionLabel].forEach {
             addSubview($0)
         }
@@ -63,6 +64,7 @@ class TodayCollectionViewCell: UICollectionViewCell {
             $0.leading.trailing.equalToSuperview().inset(24.0)
         }
         
+        // self 를 떼도 무방하다.
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.3
         layer.shadowRadius = 10
