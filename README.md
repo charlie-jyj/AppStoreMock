@@ -91,6 +91,39 @@ extension text: UICollectionViewDelegateFlowLayout {
 2. root UIViewController 지정하기
 3. 기본적으로 UIViewController 는 var *navigationController*, *navigationItem* interface를 가지고 있다. : the nearest ancestor in the view controller hierarchy and the navigation item used to represent the view controller in a parent's navigation bar
 
+#### (5) UIActivityViewController
+
+<https://developer.apple.com/documentation/uikit/uiactivityviewcontroller>
+
+A view Controller that you use to offer standard services from your app, such as copying items to the pasteboard, posting content to social media sites, sending items via email or SMS, and more. 
+
+on iPad, you must present the view controller in a popover. On iPhone and iPod touch, you must present it modally.
+
+```swift
+init(activityItems: [Any], applicationActivities: [UIActivity]?)
+```
+
+- activityItems : The array of data objects on which to perform the activity. the type of objects in the array is variable and dependent on the data your application manages. Instead of actual data objects, the objects in this array can be objects that adopt the *UIActivityItemSource* protocol, such as UIActivityItemProvider objects.
+- applicationActivities : An array of UIActivity objects representing the custom services that your application supports.
+
+```swift
+
+private let shareButton: UIButton = {
+  let button = UIButton()
+  button.addTarget(self, action: #selector(didTapShareButton), for: .touchUpInside)
+  return button
+}()
+
+extension {
+  @objc func didTapShareButton () {
+    let activityItems: [Any] = [today.title, today.desc]
+    let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+    present(activityViewController, animation: true, completion: nil)
+  }
+}
+
+```
+
 ### 3) 새롭게 알게 된 것
 
 #### ViewController 를 객체화하기
