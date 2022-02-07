@@ -48,11 +48,48 @@ UITabBarController의 viewControllers.tabBarItem 으로 달아준다.
   2. header register : cell 과는 다른 메서드 사용함 (forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader)
   3. collectionView.collectionViewLayout 설정
   4. datasource : numberOfItemsInSection, cellForItemAt, viewForSupplementaryElementOfKind 
-  5. UICollectionDelegateFlowLayout
+  5. *UICollectionDelegateFlowLayout*
     .sizeForItemAt
     .referenceSizeForHeaderInSection
     .insetForSectionAt
     .didSelectItemAt
+
+##### private lazy var collectionView
+
+```swift
+private lazy var collectionView: UICollectionView = {
+  //1. 레이아웃 설정
+  let layout = UICollectionViewFlowLayout()
+  layout.scrollDirection = .horizontal
+
+  //2. 컬렉션 뷰 객체 생성
+  let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+
+  //3. 컬렉션 뷰의 딜리게이트 설정
+  collectionView.delegate = self
+  collectionView.dataSource = self
+
+  //4. 컬렉션 뷰에 커스텀 셀 등록
+  collectionView.register(Cell.self, forCellWithReuseIdentifier: "myCell")
+
+  return collectionView
+}()
+
+extension test: UICollectionViewDataSource {
+  func collectionView(_ collectionView:, numberOfItemsInSection section:)
+  func collectionView(_ collectionView:, cellForItemAt indexPath:)
+}
+
+extension text: UICollectionViewDelegateFlowLayout {
+
+}
+```
+
+#### (4) UINavigationController
+
+1. UITabBarController의 controllers 중 하나인 UINavigaitonController(rootViewController:)
+2. root UIViewController 지정하기
+3. 기본적으로 UIViewController 는 var *navigationController*, *navigationItem* interface를 가지고 있다. : the nearest ancestor in the view controller hierarchy and the navigation item used to represent the view controller in a parent's navigation bar
 
 ### 3) 새롭게 알게 된 것
 
@@ -152,11 +189,13 @@ and keep your layoutSubviews as light as possible
 - layer.corderRadius
 - backgroundColor
 
-#### Error Message
+#### Crash Message
 
 > uicollectionview must be initialized with a non-nil layout parameter
 나는 강의 자료와는 달리, TodayViewController 를 UICollectionViewController 로 만들었기 때문에 
-보통의 그냥 UICollectionView 에서 UIcollectionView를 생성하여, (layout 과 함께) addSubview 하는 과정을 생략했으므로, TabBarController에서 TodayViewController 를 initialize 할 때, collectionViewLayout 을 parameter 로 넘겨야 했다.
+보통의 그냥 UIViewController 에서 UIcollectionView를 생성하여, (layout과 함께) addSubview 하는 과정을 생략했으므로, TabBarController에서 TodayViewController 를 initialize 할 때, collectionViewLayout 을 parameter 로 넘겨야 했다. (layout이 없이 만들면 무조건 crash)
+
+<https://developer.apple.com/documentation/uikit/uicollectionviewcontroller>
 
 ```swift
 private lazy var todayViewController: UIViewController = {
@@ -173,3 +212,15 @@ private lazy var todayViewController: UIViewController = {
         return viewController
     }()
 ```
+
+#### view.safeAreaLayoutGuide
+
+The layout guide representing the portion of your view that is unobscured by bars and other content. when the view is visible onscreen, this guide reflects the portion of the view that is not covered by navigation bars, tab bars, toolbars, and other ancestor views. 
+<https://developer.apple.com/documentation/uikit/uiview/2891102-safearealayoutguide>
+
+#### add arranged subview vs add subview
+
+arrangedSubviews which is the list of views arranged *by the stack view*
+the stack view ensures that the arrangedSubviews array is always a subset of its subviews arrray. Therefore, whenever the addArrangedSubview method is called, the stack view adds the view as a subview, if it is not already.
+<https://developer.apple.com/documentation/uikit/uistackview/1616232-arrangedsubviews>
+
